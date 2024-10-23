@@ -35,16 +35,27 @@ exports.getPlayer = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createPlayer = catchAsync(async (req, res, next) => {
-  const newPlayer = await Player.create(req.body);
+exports.createPlayer = async (req, res) => {
+  try {
+  
 
-  res.status(201).json({
-    status: 'success',
-    data: {
-      player: newPlayer
-    }
-  });
-});
+    const newPlayer = await Player.create(req.body);
+
+    res.status(201).json({
+      status: 'success',
+      data: {
+        player: newPlayer
+      }
+    });
+  } catch (err) {
+   
+    res.status(500).json({
+      status: 'fail',
+      message: 'Failed to create player',
+      error: err.message
+    });
+  }
+};
 
 exports.updatePlayer = catchAsync(async (req, res, next) => {
   const player = await Player.findByIdAndUpdate(req.params.id, req.body, {
